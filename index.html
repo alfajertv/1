@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0a08">
+<title>RIMALTECH | تسجيل الدخول</title>
+
+<style>
+:root{--gold:#dfc184;--white:#fffaf0}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100dvh;background:#0b0a08;color:var(--white);font-family:Arial,sans-serif}
+.bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:-2;opacity:.85;transition:opacity .8s}
+body:after{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(90deg,#08080655,#08080677 55%,#080806bb),linear-gradient(0deg,#08080688,transparent 65%);pointer-events:none}
+main{position:relative;min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:space-between;gap:50px;padding:6vw 9vw}
+.branding{flex:1;min-width:0}
+.brand{direction:ltr;text-align:left}
+.logo{font-size:clamp(40px,5.5vw,76px);font-weight:900;letter-spacing:3px}
+.logo span{color:var(--gold)}
+.arabic{margin-top:13px;color:var(--gold);font-size:clamp(19px,2vw,26px);letter-spacing:5px}
+.tag{margin-top:22px;font-size:11px;letter-spacing:4px;color:#ded3bc}
+.intro{margin-top:65px;max-width:510px}
+.intro h1{font-size:clamp(30px,3.6vw,49px);line-height:1.7;margin:0 0 12px}
+.intro h1 span{color:var(--gold)}
+.intro p{color:#e0d9cb;line-height:2.2;font-size:14px;max-width:430px}
+.form{width:min(100%,370px);flex-shrink:0;direction:rtl}
+.form h2{font-size:29px;margin:0 0 12px}
+.desc{color:#e0d7c6;font-size:13px;line-height:2;margin-bottom:30px}
+.field{margin-bottom:23px}
+label{display:block;font-size:13px;font-weight:bold;margin-bottom:11px}
+.input{display:flex;align-items:center;border-bottom:1px solid #ffffff80;transition:border .2s}
+.input:focus-within{border-color:var(--gold)}
+input[type=text],input[type=password]{width:100%;min-width:0;padding:15px 0;background:transparent;border:0;outline:0;color:white;font-size:15px}
+input::placeholder{color:#ded4c2}
+.eye{border:0;background:none;color:var(--gold);cursor:pointer;font-size:12px;padding:8px}
+.options{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 28px;color:#eee3d0;font-size:11px}
+.remember{display:flex;align-items:center;gap:8px;margin:0;cursor:pointer}
+.remember input{accent-color:var(--gold)}
+.submit{width:100%;padding:16px;border:1px solid var(--gold);background:var(--gold);color:#17130b;font-size:14px;font-weight:bold;cursor:pointer;transition:background .2s}
+.submit:hover{background:#f2dba8}
+.message{min-height:24px;margin-top:15px;font-size:12px;line-height:1.8;color:#f0c7a8}
+.bottom{margin-top:30px;color:#e0d5c2;font-size:10px;line-height:2}
+@media(min-aspect-ratio:2/1){main{padding-left:12vw;padding-right:12vw}.form{width:410px}}
+@media(max-width:760px){
+ main{flex-direction:column;align-items:stretch;justify-content:center;gap:42px;padding:35px 26px}
+ .branding{text-align:center}
+ .brand{text-align:center}
+ .logo{font-size:43px}
+ .arabic{font-size:20px;margin-top:9px}
+ .tag{font-size:9px;letter-spacing:3px}
+ .intro{display:none}
+ .form{width:100%;max-width:420px;margin:auto}
+ .form h2{font-size:26px}
+ body:after{background:linear-gradient(0deg,#080806ee,#080806a8 65%,#08080699)}
+}
+@media(prefers-reduced-motion:reduce){.bg{transition:none}}
+</style>
+</head>
+
+<body>
+<img class="bg" id="bg" alt="Scenic landscape">
+
+<main>
+  <section class="branding">
+    <div class="brand">
+      <div class="logo">RIMAL<span>TECH</span></div>
+      <div class="arabic">ريمال تك</div>
+      <div class="tag">PREMIUM DIGITAL EXPERIENCE</div>
+    </div>
+
+    <div class="intro">
+      <h1>عالم الترفيه<br><span>بأسلوب مختلف</span></h1>
+      <p>اكتشف تجربة رقمية عصرية تجمع بين الأناقة والبساطة، واستمتع بعالمك المفضل من أي مكان.</p>
+    </div>
+  </section>
+
+  <form class="form" id="login">
+    <h2>تسجيل الدخول</h2>
+    <div class="desc">مرحباً بعودتك، أدخل بيانات حسابك للمتابعة.</div>
+
+    <div class="field">
+      <label for="username">اسم المستخدم</label>
+      <div class="input">
+        <input id="username" name="username" type="text"
+          placeholder="أدخل اسم المستخدم"
+          autocomplete="username" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="password">كلمة المرور</label>
+      <div class="input">
+        <input id="password" name="password" type="password"
+          placeholder="أدخل كلمة المرور"
+          autocomplete="current-password" required>
+        <button class="eye" id="eye" type="button">عرض</button>
+      </div>
+    </div>
+
+    <div class="options">
+      <label class="remember">
+        <input type="checkbox" id="remember"> تذكرني
+      </label>
+      <span>RIMALTECH ACCESS</span>
+    </div>
+
+    <button class="submit" type="submit">دخول إلى المنصة ←</button>
+    <div class="message" id="message" role="status" aria-live="polite"></div>
+    <div class="bottom">© 2026 RIMALTECH · جميع الحقوق محفوظة</div>
+  </form>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+
+/* BACKGROUND BERGANTI SETIAP 10 DETIK */
+const photos=[
+"photo-1470770841072-f978cf4d019e",
+"photo-1464822759023-fed622ff2c3b",
+"photo-1500530855697-b586d89ba3ee",
+"photo-1507525428034-b723cf961d3e",
+"photo-1448375240586-882707db888b",
+"photo-1470252649378-9c29740c9fa8",
+"photo-1469474968028-56623f02e42e",
+"photo-1519681393784-d120267933ba"
+];
+
+let index=0;
+const bg=$("bg");
+
+function imageUrl(id){
+ return "https://images.unsplash.com/"+id+
+ "?auto=format&fit=crop&w=3840&q=90";
+}
+
+bg.src=imageUrl(photos[0]);
+
+function changeBackground(){
+ const next=(index+1)%photos.length;
+ const img=new Image();
+
+ img.onload=()=>{
+   bg.style.opacity="0";
+   setTimeout(()=>{
+     bg.src=img.src;
+     bg.style.opacity=".85";
+     index=next;
+   },400);
+ };
+
+ img.onerror=()=>{
+   index=next;
+ };
+
+ img.src=imageUrl(photos[next]);
+}
+
+setInterval(changeBackground,10000);
+
+/* SHOW / HIDE PASSWORD */
+$("eye").addEventListener("click",()=>{
+ const p=$("password");
+ const show=p.type==="password";
+ p.type=show?"text":"password";
+ $("eye").textContent=show?"إخفاء":"عرض";
+});
+
+/* LOGIN KIKI */
+$("login").addEventListener("submit",e=>{
+ e.preventDefault();
+
+ const user=$("username").value.trim();
+ const pass=$("password").value;
+ const msg=$("message");
+
+ if(user==="Kiki" && pass==="Kiki"){
+   msg.style.color="#dfc184";
+   msg.textContent="تم تسجيل الدخول بنجاح...";
+
+   setTimeout(()=>{
+     window.location.href="channels.html";
+   },600);
+ }else{
+   msg.style.color="#ff9999";
+   msg.textContent="اسم المستخدم أو كلمة المرور غير صحيحة";
+ }
+});
+</script>
+</body>
+</html>
