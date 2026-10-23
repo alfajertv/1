@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090909">
+<title>RIMALTECH</title>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<style>
+:root{--g:#dfc184;--b:#090909;--l:#292929}
+*{box-sizing:border-box}body{margin:0;background:var(--b);color:#f5f2eb;font:14px Arial}
+button,input{font:inherit;cursor:pointer}
+header{height:65px;padding:8px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#0c0c0c;border-bottom:1px solid var(--l)}
+.brand{direction:ltr;font-size:25px;font-weight:900}.brand span{color:var(--g)}
+.info{display:flex;gap:18px;text-align:center;color:var(--g);font-size:12px}.info small{display:block;color:#999;margin-bottom:4px}
+.tg,.ctrl{display:grid;place-items:center;background:#17140e;border:1px solid #5b4c30;border-radius:10px;color:var(--g)}
+.tg{width:40px;height:40px}.tg svg{width:24px;fill:currentColor}
+.shell{direction:ltr;display:grid;grid-template-columns:1fr 1fr;margin:12px;height:calc(100dvh - 89px);min-height:300px;border:1px solid #302a20;border-radius:16px;overflow:hidden}
+aside,main{direction:rtl;min-width:0;min-height:0}aside{display:flex;flex-direction:column;border-right:1px solid var(--l)}
+.sidehead{padding:15px;border-bottom:1px solid var(--l)}h2{margin:0;font-size:17px}
+.search{width:100%;margin-top:12px;padding:11px;background:#151515;color:white;border:1px solid #333;border-radius:9px}
+.list{flex:1;overflow:auto}.channel{display:block;width:100%;padding:13px 16px;text-align:right;background:transparent;color:#ddd;border:0;border-bottom:1px solid #202020;font-weight:bold}
+.channel:hover,.channel.active{background:#201b12;color:var(--g)}
+main{display:flex;flex-direction:column;padding:14px;gap:10px}#title{font-size:17px;font-weight:bold}#group{font-size:11px;color:#999;margin-top:4px}
+.player{position:relative;isolation:isolate;flex:1;min-height:0;overflow:hidden;background:#000;border:1px solid #302a20;border-radius:13px}
+video,.nature{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}video{z-index:2;background:#000}.nature{z-index:1;object-fit:cover}
+.welcome{position:absolute;z-index:1;inset:0;display:grid;place-items:center;text-align:center;background:#0005;pointer-events:none}
+.welcome[hidden],.overlay[hidden]{display:none!important}.welcome h1{direction:ltr;font-size:clamp(30px,5vw,60px);margin:0}.welcome h1 span{color:var(--g)}.welcome p{color:var(--g)}
+.player.is-playing .nature,.player.is-playing .welcome{display:none!important}
+.overlay{position:absolute;z-index:3;inset:0;display:grid;place-items:center;background:#0005;pointer-events:none}.overlay b{padding:10px;background:#000b;border-radius:8px}
+.controls{position:absolute;z-index:5;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:7px;background:#101010df;border:1px solid #5b4c30;border-radius:12px;opacity:0;visibility:hidden}
+.player.controls-visible .controls{opacity:1;visibility:visible}.ctrl{width:39px;height:39px}.ctrl svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8}
+.footer{display:flex;justify-content:space-between;color:#888;font-size:10px}.footer b{color:var(--g)}
+#popup{position:fixed;inset:0;z-index:99;display:grid;place-items:center;padding:20px;background:#000c;backdrop-filter:blur(5px)}
+#popup.closed{display:none!important}.modal{width:min(340px,100%);padding:23px;text-align:center;background:#111;border:1px solid #5b4c30;border-radius:16px}
+.modal h2{color:var(--g)}.modal p{color:#bbb;line-height:1.8}.action{display:block;margin-top:12px;padding:12px;background:var(--g);color:#111;text-decoration:none;font-weight:bold;border-radius:9px}
+.close{margin-top:10px;padding:9px 20px;background:#222;border:1px solid #444;border-radius:9px;color:white}
+@media(max-width:650px){header{height:54px;padding:6px 9px}.brand{font-size:19px}.info{gap:7px;flex:1}.info small{font-size:8px}.info strong{font-size:10px}.tg{width:33px;height:33px}.shell{margin:6px;height:calc(100dvh - 66px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));min-height:0}main{padding:7px;gap:6px}.sidehead{padding:8px}.sidehead h2{font-size:13px}.search{padding:8px;margin-top:7px}.channel{padding:10px;font-size:11px}}
+@media(max-width:850px) and (orientation:landscape){header{height:45px;padding:4px 10px}.brand{font-size:18px}.shell{margin:5px;height:calc(100dvh - 55px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}main{padding:6px;gap:4px}.sidehead{padding:6px}.search{padding:6px;margin-top:5px}.channel{padding:8px;font-size:10px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand">RIMAL<span>TECH</span></div>
+ <div class="info">
+  <div><small>الوقت · العراق</small><strong id="clock">--:--:--</strong></div>
+  <div><small>طقس بغداد</small><strong id="temp">--°م</strong></div>
+  <div><small>التاريخ اليوم</small><strong id="date">--</strong></div>
+ </div>
+ <button class="tg" id="telegram" aria-label="تلغرام"><svg viewBox="0 0 24 24"><path d="M21.5 3.2 18.3 20c-.24 1.19-.88 1.48-1.79.92l-4.95-3.65-2.39 2.3-.63-4.86 9.17-8.29c.4-.35-.09-.55-.62-.2L5.76 13.7.88 12.17c-1.06-.33-1.08-1.06.22-1.57z"/></svg></button>
+</header>
+<div class="shell">
+ <aside><div class="sidehead"><h2>قائمة القنوات</h2><input id="search" class="search" placeholder="ابحث عن قناة..."></div><div class="list" id="list"></div></aside>
+ <main>
+  <div><div id="title">RIMALTECH</div><div id="group">اختر قناة للمشاهدة</div></div>
+  <div class="player" id="player">
+   <img class="nature" id="nature" alt="مناظر طبيعية">
+   <div class="welcome" id="welcome"><div><h1>RIMAL<span>TECH</span></h1><p id="caption">اكتشف جمال الطبيعة حول العالم</p><small id="location">وجهات سياحية مميزة</small></div></div>
+   <video id="video" playsinline preload="none" hidden></video>
+   <div class="overlay" id="overlay" hidden><b id="message"></b></div>
+   <div class="controls">
+    <button class="ctrl" id="play" aria-label="تشغيل"><svg id="playIcon" viewBox="0 0 24 24"><path d="m8 5 12 7-12 7z"/></svg></button>
+    <button class="ctrl" id="mute" aria-label="الصوت"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 9a5 5 0 0 1 0 6"/></svg></button>
+    <button class="ctrl" id="stop" aria-label="إيقاف"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12"/></svg></button>
+    <button class="ctrl" id="full" aria-label="ملء الشاشة"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
+   </div>
+  </div>
+  <div class="footer"><span id="status">جاهز للمشاهدة</span><span>POWERED BY <b>RIMALTECH</b></span></div>
+ </main>
+</div>
+<div id="popup" role="dialog" aria-modal="true">
+ <div class="modal"><h2>مجموعة RIMALTECH</h2><p>انضم إلى مجموعة تلغرام لمتابعة أخبار وتحديثات القنوات.</p><a class="action" href="https://t.me/rimalott" target="_blank" rel="noopener">الانضمام إلى المجموعة</a><button class="close" id="close">إغلاق</button></div>
+</div>
+<script>
+const $=id=>document.getElementById(id),v=$("video"),p=$("player");
+const channels=[...Array.from({length:9},(_,i)=>({name:`بي إن سبورت ${i+1}`,group:"الرياضة",url:`https://web.aboozayed.web.id/${i+1}/index.m3u8`})),...["ثمانية 1","ثمانية 2","ثمانية 3","الفجر الفلسطينية 1","الفجر الفلسطينية 2","الفجر الفلسطينية 3","الفجر الفلسطينية 4","الفجر الفلسطينية 5","قناة القرآن الكريم من مكة","قناة السنة النبوية من المدينة","ستارزبلاي"].map(name=>({name,group:"قنوات متنوعة",url:""}))];
+const scenes=[
+["https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=80","البحيرات والجبال"],
+["https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80","الطبيعة الساحرة"],
+["https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80","قمم الجبال"],
+["https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1200&q=80","شروق الشمس"]];
+let selected=-1,hls=null,si=0,timer;
+function icon(play){$("playIcon").innerHTML=play?'<path d="M7 5h4v14H7zM15 5h4v14h-4z"/>':'<path d="m8 5 12 7-12 7z"/>'}
+function render(){const q=$("search").value.toLowerCase(),f=document.createDocumentFragment();channels.forEach((c,i)=>{if(!c.name.toLowerCase().includes(q))return;const b=document.createElement("button");b.className="channel"+(i===selected?" active":"");b.textContent=c.name;b.onclick=()=>select(i);f.append(b)});$("list").replaceChildren(f)}
+function scene(){if(selected>=0)return;const s=scenes[si++%scenes.length];$("nature").src=s[0];$("location").textContent=s[1]}
+function stop(){if(hls){hls.destroy();hls=null}v.pause();v.removeAttribute("src");v.load();selected=-1;v.hidden=true;$("nature").style.display="block";$("welcome").hidden=false;$("overlay").hidden=true;p.classList.remove("is-playing","controls-visible");$("title").textContent="RIMALTECH";$("group").textContent="اختر قناة للمشاهدة";$("status").textContent="جاهز للمشاهدة";icon(false);render();scene()}
+function select(i){stop();selected=i;render();const c=channels[i];$("title").textContent=c.name;$("group").textContent=c.group;$("welcome").hidden=true;$("nature").style.display="none";v.hidden=false;$("overlay").hidden=false;$("message").textContent=c.url?"جارٍ تحميل البث...":"البث غير متوفر لهذه القناة";if(!c.url)return;
+const start=()=>v.play().catch(()=>{$("message").textContent="اضغط تشغيل لبدء البث";$("overlay").hidden=false;p.classList.add("controls-visible")});
+if(window.Hls&&Hls.isSupported()){hls=new Hls();hls.on(Hls.Events.MANIFEST_PARSED,start);hls.on(Hls.Events.ERROR,(_,d)=>{if(d.fatal)$("message").textContent="تعذر تشغيل البث"});hls.loadSource(c.url);hls.attachMedia(v)}else if(v.canPlayType("application/vnd.apple.mpegurl")){v.src=c.url;v.onloadedmetadata=start;v.load()}else $("message").textContent="المتصفح لا يدعم هذا البث"}
+v.onplaying=()=>{$("overlay").hidden=true;$("nature").style.display="none";$("welcome").hidden=true;p.classList.add("is-playing");p.classList.remove("controls-visible");$("status").textContent="البث يعمل";icon(true)};
+v.onpause=()=>{icon(false);if(selected>=0){p.classList.add("controls-visible");$("status").textContent="متوقف مؤقتاً"}};
+$("play").onclick=()=>{if(selected>=0&&channels[selected].url){v.paused?v.play().catch(()=>{}):v.pause();p.classList.add("controls-visible")}};
+$("mute").onclick=()=>v.muted=!v.muted;
+$("stop").onclick=stop;
+$("full").onclick=()=>document.fullscreenElement?document.exitFullscreen():p.requestFullscreen().catch(()=>{});
+p.addEventListener("pointermove",()=>{if(!v.paused){p.classList.add("controls-visible");clearTimeout(timer);timer=setTimeout(()=>p.classList.remove("controls-visible"),2500)}});
+$("search").oninput=render;
+$("telegram").onclick=()=> $("popup").classList.remove("closed");
+function close(){ $("popup").classList.add("closed") }
+$("close").onclick=close;$("popup").onclick=e=>{if(e.target===$("popup"))close()};document.onkeydown=e=>{if(e.key==="Escape")close()};
+function clock(){const d=new Date(),z="Asia/Baghdad";$("clock").textContent=new Intl.DateTimeFormat("en-GB",{timeZone:z,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(d);$("date").textContent=new Intl.DateTimeFormat("ar-IQ",{timeZone:z,dateStyle:"medium"}).format(d)}
+clock();setInterval(clock,1000);
+async function weather(){try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=33.3152&longitude=44.3661&current=temperature_2m&timezone=Asia%2FBaghdad");$("temp").textContent=Math.round((await r.json()).current.temperature_2m)+"°م"}catch{$("temp").textContent="--°م"}}
+weather();setInterval(weather,600000);render();scene();setInterval(scene,10000);
+</script>
+</body>
+</html>
