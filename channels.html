@@ -47,8 +47,6 @@ video{background:#000;z-index:2}
 #loading p{margin:0;color:#c6b58e}
 .spinner{width:30px;height:30px;border:3px solid #393021;border-top-color:var(--g);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* التحكم مخفي في الخلفية */
 .controls{position:absolute;z-index:5;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:9px;padding:9px 12px;background:#101010ed;border:1px solid #80683c;border-radius:14px;opacity:0;visibility:hidden;transition:.2s}
 .playing .controls{opacity:1;visibility:visible}
 .hide .controls{opacity:0;visibility:hidden}
@@ -164,11 +162,30 @@ main{padding:6px}
 </div>
 
 <script>
-const $=id=>document.getElementById(id),v=$("video"),p=$("player"),load=$("loading");
+const $=id=>document.getElementById(id);
+const v=$("video"),p=$("player"),load=$("loading");
 
 const channels=[
-...Array.from({length:9},(_,i)=>({name:`بي إن سبورت ${i+1}`,group:"الرياضة",url:`https://web.aboozayed.web.id/${i+1}/index.m3u8`})),
-...["ثمانية 1","ثمانية 2","ثمانية 3","الفجر الفلسطينية 1","الفجر الفلسطينية 2","الفجر الفلسطينية 3","الفجر الفلسطينية 4","الفجر الفلسطينية 5","قناة القرآن الكريم من مكة","قناة السنة النبوية من المدينة","ستارزبلاي"].map(name=>({name,group:"قنوات متنوعة",url:""}))
+{name:"بي إن سبورت 1",group:"الرياضة",url:"https://web.aboozayed.web.id/1/index.m3u8"},
+{name:"بي إن سبورت 2",group:"الرياضة",url:"https://web.aboozayed.web.id/2/index.m3u8"},
+{name:"بي إن سبورت 3",group:"الرياضة",url:"https://web.aboozayed.web.id/3/index.m3u8"},
+{name:"بي إن سبورت 4",group:"الرياضة",url:"https://web.aboozayed.web.id/4/index.m3u8"},
+{name:"بي إن سبورت 5",group:"الرياضة",url:"https://web.aboozayed.web.id/5/index.m3u8"},
+{name:"بي إن سبورت 6",group:"الرياضة",url:"https://web.aboozayed.web.id/6/index.m3u8"},
+{name:"بي إن سبورت 7",group:"الرياضة",url:"https://web.aboozayed.web.id/7/index.m3u8"},
+{name:"بي إن سبورت 8",group:"الرياضة",url:"https://web.aboozayed.web.id/8/index.m3u8"},
+{name:"بي إن سبورت 9",group:"الرياضة",url:"https://web.aboozayed.web.id/9/index.m3u8"},
+{name:"ثمانية 1",group:"قنوات متنوعة",url:"https://web.aboozayed.web.id/th1/index.m3u8"},
+{name:"ثمانية 2",group:"قنوات متنوعة",url:"https://web.aboozayed.web.id/th2/index.m3u8"},
+{name:"ثمانية 3",group:"قنوات متنوعة",url:"https://web.aboozayed.web.id/th3/index.m3u8"},
+{name:"الفجر الفلسطينية 1",group:"قنوات متنوعة",url:""},
+{name:"الفجر الفلسطينية 2",group:"قنوات متنوعة",url:""},
+{name:"الفجر الفلسطينية 3",group:"قنوات متنوعة",url:""},
+{name:"الفجر الفلسطينية 4",group:"قنوات متنوعة",url:""},
+{name:"الفجر الفلسطينية 5",group:"قنوات متنوعة",url:""},
+{name:"قناة القرآن الكريم من مكة",group:"قنوات متنوعة",url:""},
+{name:"قناة السنة النبوية من المدينة",group:"قنوات متنوعة",url:""},
+{name:"ستارزبلاي",group:"قنوات متنوعة",url:""}
 ];
 
 const scenes=[
@@ -181,7 +198,7 @@ const scenes=[
 let selected=-1,hls=null,si=0,ht;
 
 function render(){
-const q=$("search").value.toLowerCase();
+const q=$("search").value.trim().toLowerCase();
 $("list").replaceChildren(...channels.map((c,i)=>{
 const b=document.createElement("button");
 b.className="channel"+(i===selected?" active":"");
@@ -209,11 +226,11 @@ if(!v.paused)ht=setTimeout(()=>p.classList.add("hide"),3000);
 }
 
 function select(i){
-if(hls)hls.destroy();
-hls=null;
+if(hls){hls.destroy();hls=null}
 v.pause();
 v.removeAttribute("src");
 v.load();
+
 selected=i;
 render();
 
@@ -232,17 +249,20 @@ $("status").textContent=c.url?"جارٍ تحميل البث...":"القناة غ
 if(!c.url)return;
 
 const start=()=>{
-if(selected===i)v.play().catch(()=>{
+if(selected===i){
+v.play().catch(()=>{
 $("loadingText").textContent="اضغط تشغيل لبدء البث";
 });
+}
 };
 
 if(window.Hls&&Hls.isSupported()){
 hls=new Hls();
 hls.on(Hls.Events.MANIFEST_PARSED,start);
 hls.on(Hls.Events.ERROR,(_,d)=>{
-if(d.fatal){
+if(d.fatal&&selected===i){
 $("loadingText").textContent="تعذر تحميل البث";
+$("status").textContent="خطأ في البث";
 }
 });
 hls.loadSource(c.url);
@@ -277,13 +297,15 @@ v.onerror=()=>{
 if(selected>=0){
 load.hidden=false;
 $("loadingText").textContent="تعذر تشغيل القناة";
+$("status").textContent="خطأ في التشغيل";
 }
 };
 
 $("play").onclick=e=>{
 e.stopPropagation();
 if(selected>=0&&channels[selected].url){
-v.paused?v.play():v.pause();
+if(v.paused)v.play().catch(()=>{$("loadingText").textContent="تعذر تشغيل البث";});
+else v.pause();
 }
 };
 
@@ -299,10 +321,9 @@ controls();
 $("full").onclick=async e=>{
 e.stopPropagation();
 try{
-document.fullscreenElement
-?await document.exitFullscreen()
-:await p.requestFullscreen();
-}catch{}
+if(document.fullscreenElement)await document.exitFullscreen();
+else await p.requestFullscreen();
+}catch(err){}
 controls();
 };
 
@@ -337,7 +358,9 @@ setInterval(clock,1000);
 async function weather(){
 try{
 const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=33.3152&longitude=44.3661&current=temperature_2m&timezone=Asia%2FBaghdad");
-$("temp").textContent=Math.round((await r.json()).current.temperature_2m)+"°م";
+if(!r.ok)throw new Error("Weather unavailable");
+const data=await r.json();
+$("temp").textContent=Math.round(data.current.temperature_2m)+"°م";
 }catch{
 $("temp").textContent="--°م";
 }
